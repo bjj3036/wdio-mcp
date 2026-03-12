@@ -8,6 +8,8 @@ export const executeScriptToolDefinition: ToolDefinition = {
   name: 'execute_script',
   description: `Executes JavaScript in browser or mobile commands via Appium.
 
+**Option B for browser interaction** — prefer get_visible_elements or click_element/set_value with a selector instead. Use execute_script only when no dedicated tool covers the action (e.g. reading computed values, triggering custom events, scrolling to a position).
+
 **Browser:** Runs JavaScript in page context. Use 'return' to get values back.
   - Example: execute_script({ script: "return document.title" })
   - Example: execute_script({ script: "return window.scrollY" })

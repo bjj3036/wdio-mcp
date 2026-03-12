@@ -13,7 +13,7 @@ export const startBrowserToolDefinition: ToolDefinition = {
   description: 'starts a browser session (Chrome, Firefox, Edge, Safari) and sets it to the current state',
   inputSchema: {
     browser: browserSchema.describe('Browser to launch: chrome, firefox, edge, safari (default: chrome)'),
-    headless: z.boolean().optional(),
+    headless: z.boolean().optional().default(true),
     windowWidth: z.number().min(400).max(3840).optional().default(1920),
     windowHeight: z.number().min(400).max(2160).optional().default(1080),
     navigationUrl: z.string().optional().describe('URL to navigate to after starting the browser'),
@@ -51,7 +51,7 @@ export const getBrowser = () => {
 
 export const startBrowserTool: ToolCallback = async ({
   browser = 'chrome',
-  headless = false,
+  headless = true,
   windowWidth = 1920,
   windowHeight = 1080,
   navigationUrl,
