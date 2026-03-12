@@ -54,6 +54,7 @@ import {
   setGeolocationToolDefinition,
 } from './tools/device.tool';
 import { executeScriptTool, executeScriptToolDefinition } from './tools/execute-script.tool';
+import { attachBrowserTool, attachBrowserToolDefinition } from './tools/attach-browser.tool';
 import pkg from '../package.json' with { type: 'json' };
 
 // IMPORTANT: Redirect all console output to stderr to avoid messing with MCP protocol (Chrome writes to console)
@@ -91,6 +92,7 @@ const registerTool = (definition: ToolDefinition, callback: ToolCallback) =>
 registerTool(startBrowserToolDefinition, startBrowserTool);
 registerTool(startAppToolDefinition, startAppTool);
 registerTool(closeSessionToolDefinition, closeSessionTool);
+registerTool(attachBrowserToolDefinition, attachBrowserTool);
 registerTool(navigateToolDefinition, navigateTool);
 
 // Element Discovery
