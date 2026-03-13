@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+// Stub fetch so getActiveTabUrl doesn't make real network requests
+vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+  json: vi.fn().mockResolvedValue([{ type: 'page', url: 'https://example.com' }]),
+}));
+
 const mockBrowser = vi.hoisted(() => ({
   sessionId: 'attached-session-id',
   capabilities: {},
