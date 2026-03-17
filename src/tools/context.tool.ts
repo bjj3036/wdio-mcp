@@ -48,6 +48,7 @@ export const getContextsTool: ToolCallback = async (): Promise<CallToolResult> =
     };
   } catch (e) {
     return {
+      isError: true,
       content: [{ type: 'text', text: `Error getting contexts: ${e}` }],
     };
   }
@@ -65,6 +66,7 @@ export const getCurrentContextTool: ToolCallback = async (): Promise<CallToolRes
     };
   } catch (e) {
     return {
+      isError: true,
       content: [{ type: 'text', text: `Error getting current context: ${e}` }],
     };
   }
@@ -103,6 +105,7 @@ export const switchContextTool: ToolCallback = async (args: {
     };
   } catch (e) {
     return {
+      isError: true,
       content: [{ type: 'text', text: `Error switching context: ${e}` }],
     };
   }

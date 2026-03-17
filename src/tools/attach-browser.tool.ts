@@ -98,6 +98,7 @@ export const attachBrowserTool: ToolCallback = async ({
     };
   } catch (e) {
     return {
+      isError: true,
       content: [{ type: 'text', text: `Error attaching to browser: ${e}` }],
     };
   }

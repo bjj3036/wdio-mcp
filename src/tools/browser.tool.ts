@@ -258,6 +258,7 @@ export const closeSessionTool: ToolCallback = async (args: { detach?: boolean } 
     };
   } catch (e) {
     return {
+      isError: true,
       content: [{ type: 'text', text: `Error closing session: ${e}` }],
     };
   }

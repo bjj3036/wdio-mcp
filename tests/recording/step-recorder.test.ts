@@ -82,16 +82,28 @@ describe('withRecording', () => {
     expect(steps[0].tool).toBe('navigate');
   });
 
-  it('records a failed tool call as error', async () => {
+  it('records a result with isError: true as error regardless of text content', async () => {
     setupSession('sess-5');
     const mockTool = vi.fn().mockResolvedValue({
-      content: [{ type: 'text', text: 'Error: element not found' }],
+      isError: true,
+      content: [{ type: 'text', text: 'Failed to find element' }],
     }) as unknown as ToolCallback;
     const wrapped = withRecording('click_element', mockTool);
     await wrapped({ selector: '#missing' });
     const steps = getSessionHistory().get('sess-5')?.steps ?? [];
     expect(steps[0].status).toBe('error');
-    expect(steps[0].error).toContain('Error:');
+    expect(steps[0].error).toBe('Failed to find element');
+  });
+
+  it('records a result without isError flag as ok even if text starts with Error:', async () => {
+    setupSession('sess-5b');
+    const mockTool = vi.fn().mockResolvedValue({
+      content: [{ type: 'text', text: 'Error: something went wrong' }],
+    }) as unknown as ToolCallback;
+    const wrapped = withRecording('click_element', mockTool);
+    await wrapped({ selector: '#btn' });
+    const steps = getSessionHistory().get('sess-5b')?.steps ?? [];
+    expect(steps[0].status).toBe('ok');
   });
 
   it('returns the original tool result unchanged', async () => {

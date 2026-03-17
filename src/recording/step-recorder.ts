@@ -49,9 +49,7 @@ export function withRecording(toolName: string, callback: ToolCallback): ToolCal
   return async (params, extra) => {
     const start = Date.now();
     const result = await callback(params, extra);
-    const isError = result.content.some(
-      (c: any) => c.type === 'text' && typeof (c as any).text === 'string' && (c as any).text.startsWith('Error'),
-    );
+    const isError = (result as any).isError === true;
     appendStep(
       toolName,
       params as Record<string, unknown>,
