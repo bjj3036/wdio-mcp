@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.5.0](https://github.com/webdriverio/mcp/compare/v2.4.1...v2.5.0) (2026-03-18)
+
+### Bug Fixes
+
+* Use correct abstraction for attach_browser, start_app_session, start_browser tools ([9cebdbd](https://github.com/webdriverio/mcp/commit/9cebdbd81237c89cc1dd03f88f05dc0b07df460b))
+
+### Refactoring
+
+* Mark tool errors with `isError` flag for consistent error detection and handling throughout the codebase ([186a03a](https://github.com/webdriverio/mcp/commit/186a03a21ce539101f228e0de1e3456854bbcd14))
+* Separate session steps (in JSON) and code generation (in JS) in Resources ([ad7ff03](https://github.com/webdriverio/mcp/commit/ad7ff0318ada815720d07e424b1409033007fee3))
+
 ## [2.4.1](https://github.com/webdriverio/mcp/compare/v2.4.0...v2.4.1) (2026-03-17)
 
 ### Features
