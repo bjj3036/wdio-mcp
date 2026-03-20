@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.5.2](https://github.com/webdriverio/mcp/compare/v2.5.1...v2.5.2) (2026-03-20)
+
+### Features
+
+* Add `launch_chrome` tool for launching Chrome with remote debugging ([eab139c](https://github.com/webdriverio/mcp/commit/eab139cc22c5e0c0956a154469f6c64adb0782d4))
+
 ## [2.5.1](https://github.com/webdriverio/mcp/compare/v2.5.0...v2.5.1) (2026-03-20)
 
 ## [2.5.0](https://github.com/webdriverio/mcp/compare/v2.4.1...v2.5.0) (2026-03-18)
