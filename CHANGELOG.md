@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.5.1](https://github.com/webdriverio/mcp/compare/v2.5.0...v2.5.1) (2026-03-20)
+
 ## [2.5.0](https://github.com/webdriverio/mcp/compare/v2.4.1...v2.5.0) (2026-03-18)
 
 ### Bug Fixes
