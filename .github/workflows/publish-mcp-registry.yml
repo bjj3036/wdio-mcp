@@ -23,7 +23,10 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install mcp-publisher
-        run: npm install -g mcp-publisher
+        run: |
+          curl -sSL https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz \
+            | tar -xz mcp-publisher
+          sudo mv mcp-publisher /usr/local/bin/mcp-publisher
 
       - name: Sync server.json version
         run: |
