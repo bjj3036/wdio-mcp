@@ -1,5 +1,6 @@
 {
   "name": "@wdio/mcp",
+  "mcpName": "io.github.webdriverio/mcp",
   "author": "Vince Graics",
   "repository": {
     "type": "git",
