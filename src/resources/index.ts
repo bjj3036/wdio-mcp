@@ -1,4 +1,6 @@
+export * from './browserstack-local.resource';
 export * from './sessions.resource';
+export * from './capabilities.resource';
 export * from './elements.resource';
 export * from './accessibility.resource';
 export * from './screenshot.resource';

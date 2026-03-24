@@ -24,9 +24,11 @@ export const startSessionToolDefinition: ToolDefinition = {
     os: z.string().optional().describe('Operating system (BrowserStack browser only, e.g. "Windows", "OS X")'),
     osVersion: z.string().optional().describe('OS version (BrowserStack browser only, e.g. "11", "Sequoia")'),
     app: z.string().optional().describe('BrowserStack app URL (bs://...) or custom_id for mobile sessions'),
-    projectName: z.string().optional().describe('BrowserStack project name for reporting'),
-    buildName: z.string().optional().describe('BrowserStack build name for reporting'),
-    sessionName: z.string().optional().describe('BrowserStack session name for reporting'),
+    reporting: z.object({
+      project: z.string().optional(),
+      build: z.string().optional(),
+      session: z.string().optional(),
+    }).optional().describe('BrowserStack reporting labels (project, build, session)'),
     headless: coerceBoolean.optional().default(true).describe('Run browser in headless mode (default: true)'),
     windowWidth: z.number().min(400).max(3840).optional().default(1920).describe('Browser window width'),
     windowHeight: z.number().min(400).max(2160).optional().default(1080).describe('Browser window height'),
@@ -43,11 +45,16 @@ export const startSessionToolDefinition: ToolDefinition = {
     fullReset: coerceBoolean.optional().describe('Uninstall app before/after session'),
     newCommandTimeout: z.number().min(0).optional().default(300).describe('Appium command timeout in seconds'),
     attach: coerceBoolean.optional().default(false).describe('Attach to existing Chrome instead of launching'),
-    port: z.number().optional().default(9222).describe('Chrome remote debugging port (for attach mode)'),
-    host: z.string().optional().default('localhost').describe('Chrome host (for attach mode)'),
-    appiumHost: z.string().optional().describe('Appium server hostname'),
-    appiumPort: z.number().optional().describe('Appium server port'),
-    appiumPath: z.string().optional().describe('Appium server path'),
+    attachConfig: z.object({
+      port: z.number().optional().default(9222),
+      host: z.string().optional().default('localhost'),
+    }).optional().describe('Chrome remote debugging connection (attach mode only, defaults: port 9222, host localhost)'),
+    appiumConfig: z.object({
+      host: z.string().optional(),
+      port: z.number().optional(),
+      path: z.string().optional(),
+    }).optional().describe('Appium server connection (local provider only)'),
+    browserstackLocal: coerceBoolean.optional().default(false).describe('Enable BrowserStack Local tunnel for testing against local/internal URLs (BrowserStack only, default: false). IMPORTANT: The BrowserStack Local binary daemon MUST already be running before calling start_session, otherwise all navigation to local/internal URLs will fail with ERR_TUNNEL_CONNECTION_FAILED. Read the wdio://browserstack/local-binary resource for the platform-specific download URL and the exact daemon start command. Do not set this to true without first confirming the daemon is running.'),
     navigationUrl: z.string().optional().describe('URL to navigate to after starting'),
     capabilities: z.record(z.string(), z.unknown()).optional().describe('Additional capabilities to merge'),
   },
@@ -61,9 +68,7 @@ type StartSessionArgs = {
   os?: string;
   osVersion?: string;
   app?: string;
-  projectName?: string;
-  buildName?: string;
-  sessionName?: string;
+  reporting?: { project?: string; build?: string; session?: string };
   headless?: boolean;
   windowWidth?: number;
   windowHeight?: number;
@@ -80,11 +85,9 @@ type StartSessionArgs = {
   fullReset?: boolean;
   newCommandTimeout?: number;
   attach?: boolean;
-  port?: number;
-  host?: string;
-  appiumHost?: string;
-  appiumPort?: number;
-  appiumPath?: string;
+  attachConfig?: { port?: number; host?: string };
+  appiumConfig?: { host?: string; port?: number; path?: string };
+  browserstackLocal?: boolean;
   navigationUrl?: string;
   capabilities?: Record<string, unknown>;
 };
@@ -153,12 +156,14 @@ async function waitForCDP(host: string, port: number, timeoutMs = 10000): Promis
 }
 
 async function startBrowserSession(args: StartSessionArgs): Promise<CallToolResult> {
-  const browser = args.browser ?? 'chrome';
-  const headless = args.headless ?? true;
-  const windowWidth = args.windowWidth ?? 1920;
-  const windowHeight = args.windowHeight ?? 1080;
-  const navigationUrl = args.navigationUrl;
-  const userCapabilities = args.capabilities ?? {};
+  const {
+    browser = 'chrome',
+    headless = true,
+    windowWidth = 1920,
+    windowHeight = 1080,
+    navigationUrl,
+    capabilities: userCapabilities = {},
+  } = args;
 
   const browserDisplayNames: Record<string, string> = {
     chrome: 'Chrome',
@@ -275,9 +280,8 @@ async function startMobileSession(args: StartSessionArgs): Promise<CallToolResul
 }
 
 async function attachBrowserSession(args: StartSessionArgs): Promise<CallToolResult> {
-  const port = args.port ?? 9222;
-  const host = args.host ?? 'localhost';
-  const navigationUrl = args.navigationUrl;
+  const { port = 9222, host = 'localhost' } = args.attachConfig ?? {};
+  const { navigationUrl } = args;
 
   await waitForCDP(host, port);
   const { activeTabUrl, allTabUrls } = await closeStaleMappers(host, port);

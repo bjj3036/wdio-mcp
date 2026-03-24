@@ -5,6 +5,7 @@ export interface ConnectionConfig {
   protocol?: string;
   user?: string;
   key?: string;
+  services?: unknown[];
 }
 
 export interface SessionProvider {

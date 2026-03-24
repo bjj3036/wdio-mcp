@@ -18,15 +18,21 @@ export class BrowserStackProvider implements SessionProvider {
     const platform = options.platform as string;
     const userCapabilities = (options.capabilities as Record<string, unknown> | undefined) ?? {};
 
+    const browserstackLocal = options.browserstackLocal as boolean | undefined;
+
     if (platform === 'browser') {
       const bstackOptions: Record<string, unknown> = {
         browserVersion: (options.browserVersion as string | undefined) ?? 'latest',
       };
       if (options.os) bstackOptions.os = options.os;
       if (options.osVersion) bstackOptions.osVersion = options.osVersion;
-      if (options.projectName) bstackOptions.projectName = options.projectName;
-      if (options.buildName) bstackOptions.buildName = options.buildName;
-      if (options.sessionName) bstackOptions.sessionName = options.sessionName;
+      if (browserstackLocal) bstackOptions.local = true;
+
+      const reporting = options.reporting as { project?: string; build?: string; session?: string } | undefined;
+
+      if (reporting?.project) bstackOptions.projectName = reporting.project;
+      if (reporting?.build) bstackOptions.buildName = reporting.build;
+      if (reporting?.session) bstackOptions.sessionName = reporting.session;
 
       return {
         browserName: (options.browser as string | undefined) ?? 'chrome',
@@ -43,13 +49,22 @@ export class BrowserStackProvider implements SessionProvider {
       deviceType: 'phone',
       appiumVersion: '3.1.0',
     };
-    if (options.projectName) bstackOptions.projectName = options.projectName;
-    if (options.buildName) bstackOptions.buildName = options.buildName;
-    if (options.sessionName) bstackOptions.sessionName = options.sessionName;
+    if (browserstackLocal) bstackOptions.local = true;
+    const reporting = options.reporting as { project?: string; build?: string; session?: string } | undefined;
+    if (reporting?.project) bstackOptions.projectName = reporting.project;
+    if (reporting?.build) bstackOptions.buildName = reporting.build;
+    if (reporting?.session) bstackOptions.sessionName = reporting.session;
+
+    const autoAcceptAlerts = options.autoAcceptAlerts as boolean | undefined;
+    const autoDismissAlerts = options.autoDismissAlerts as boolean | undefined;
 
     return {
       platformName: platform,
       'appium:app': options.app,
+      'appium:autoGrantPermissions': (options.autoGrantPermissions as boolean | undefined) ?? true,
+      'appium:autoAcceptAlerts': autoDismissAlerts ? undefined : (autoAcceptAlerts ?? true),
+      'appium:autoDismissAlerts': autoDismissAlerts,
+      'appium:newCommandTimeout': (options.newCommandTimeout as number | undefined) ?? 300,
       'bstack:options': bstackOptions,
       ...userCapabilities,
     };

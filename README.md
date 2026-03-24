@@ -216,6 +216,117 @@ appium
 # Server runs at http://127.0.0.1:4723 by default
 ```
 
+## BrowserStack
+
+Run browser and mobile app tests on [BrowserStack](https://www.browserstack.com/) real devices and browsers without any local setup.
+
+### Prerequisites
+
+Set your credentials as environment variables:
+
+```bash
+export BROWSERSTACK_USERNAME=your_username
+export BROWSERSTACK_ACCESS_KEY=your_access_key
+```
+
+Or add them to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "wdio-mcp": {
+      "command": "npx",
+      "args": ["-y", "@wdio/mcp@latest"],
+      "env": {
+        "BROWSERSTACK_USERNAME": "your_username",
+        "BROWSERSTACK_ACCESS_KEY": "your_access_key"
+      }
+    }
+  }
+}
+```
+
+### Browser Sessions
+
+Run a browser on a specific OS/version combination:
+
+```javascript
+start_session({
+  provider: 'browserstack',
+  platform: 'browser',
+  browser: 'chrome',           // chrome | firefox | edge | safari
+  browserVersion: 'latest',    // default: latest
+  os: 'Windows',               // e.g. "Windows", "OS X"
+  osVersion: '11',             // e.g. "11", "Sequoia"
+  reporting: {
+    project: 'My Project',
+    build: 'v1.2.0',
+    session: 'Login flow'
+  }
+})
+```
+
+### Mobile App Sessions
+
+Test on BrowserStack real devices. First upload your app (or use an existing `bs://` URL):
+
+```javascript
+// Upload a local .apk or .ipa (returns a bs:// URL)
+upload_app({ path: '/path/to/app.apk' })
+
+// Start a session with the returned URL
+start_session({
+  provider: 'browserstack',
+  platform: 'android',         // android | ios
+  app: 'bs://abc123...',       // bs:// URL or custom_id from upload
+  deviceName: 'Samsung Galaxy S23',
+  platformVersion: '13.0',
+  reporting: {
+    project: 'My Project',
+    build: 'v1.2.0',
+    session: 'Checkout flow'
+  }
+})
+```
+
+Use `list_apps` to see previously uploaded apps:
+
+```javascript
+list_apps()                               // own uploads, sorted by date
+list_apps({ sortBy: 'app_name' })
+list_apps({ organizationWide: true })     // all uploads in your org
+```
+
+### BrowserStack Local
+
+To test against URLs that are only accessible on your local machine or internal network, enable the BrowserStack Local tunnel:
+
+```javascript
+start_session({
+  provider: 'browserstack',
+  platform: 'browser',
+  browser: 'chrome',
+  browserstackLocal: true      // starts tunnel automatically
+})
+```
+
+### Reporting Labels
+
+All session types support `reporting` labels that appear in the BrowserStack Automate dashboard:
+
+| Field                     | Description                                |
+|---------------------------|--------------------------------------------|
+| `reporting.project`       | Group sessions under a project name        |
+| `reporting.build`         | Tag sessions with a build/version label    |
+| `reporting.session`       | Name for the individual test session       |
+
+### BrowserStack Tools
+
+| Tool          | Description                                                                      |
+|---------------|----------------------------------------------------------------------------------|
+| `upload_app`  | Upload a local `.apk` or `.ipa` to BrowserStack; returns a `bs://` URL          |
+| `list_apps`   | List apps previously uploaded to your BrowserStack account                       |
+
 ## Features
 
 ### Browser Automation

@@ -52,13 +52,11 @@ describe('BrowserStackProvider', () => {
       expect(bstack.osVersion).toBe('11');
     });
 
-    it('passes projectName, buildName, sessionName to bstack:options', () => {
+    it('passes reporting labels to bstack:options', () => {
       const caps = provider.buildCapabilities({
         platform: 'browser',
         browser: 'firefox',
-        projectName: 'MyProject',
-        buildName: 'build-1',
-        sessionName: 'login test',
+        reporting: { project: 'MyProject', build: 'build-1', session: 'login test' },
       });
       const bstack = caps['bstack:options'] as Record<string, unknown>;
       expect(bstack.projectName).toBe('MyProject');
@@ -73,6 +71,22 @@ describe('BrowserStackProvider', () => {
         capabilities: { 'goog:chromeOptions': { args: ['--custom-flag'] } },
       });
       expect((caps['goog:chromeOptions'] as any)?.args).toContain('--custom-flag');
+    });
+
+    it('sets local: true in bstack:options when browserstackLocal is true', () => {
+      const caps = provider.buildCapabilities({
+        platform: 'browser',
+        browser: 'chrome',
+        browserstackLocal: true,
+      });
+      const bstack = caps['bstack:options'] as Record<string, unknown>;
+      expect(bstack.local).toBe(true);
+    });
+
+    it('does not set local in bstack:options when browserstackLocal is false', () => {
+      const caps = provider.buildCapabilities({ platform: 'browser', browser: 'chrome' });
+      const bstack = caps['bstack:options'] as Record<string, unknown>;
+      expect(bstack.local).toBeUndefined();
     });
   });
 
@@ -100,14 +114,55 @@ describe('BrowserStackProvider', () => {
       expect(bstack.platformVersion).toBe('17.0');
     });
 
-    it('defaults appiumVersion to 3.10.0', () => {
+    it('defaults appiumVersion to 3.1.0', () => {
       const caps = provider.buildCapabilities({
         platform: 'android',
         deviceName: 'Pixel 7',
         app: 'bs://abc',
       });
       const bstack = caps['bstack:options'] as Record<string, unknown>;
-      expect(bstack.appiumVersion).toBe('3.10.0');
+      expect(bstack.appiumVersion).toBe('3.1.0');
+    });
+
+    it('defaults autoGrantPermissions and autoAcceptAlerts to true', () => {
+      const caps = provider.buildCapabilities({
+        platform: 'android',
+        deviceName: 'Pixel 7',
+        app: 'bs://abc',
+      });
+      expect(caps['appium:autoGrantPermissions']).toBe(true);
+      expect(caps['appium:autoAcceptAlerts']).toBe(true);
+    });
+
+    it('clears autoAcceptAlerts when autoDismissAlerts is set', () => {
+      const caps = provider.buildCapabilities({
+        platform: 'android',
+        deviceName: 'Pixel 7',
+        app: 'bs://abc',
+        autoDismissAlerts: true,
+      });
+      expect(caps['appium:autoDismissAlerts']).toBe(true);
+      expect(caps['appium:autoAcceptAlerts']).toBeUndefined();
+    });
+
+    it('defaults newCommandTimeout to 300', () => {
+      const caps = provider.buildCapabilities({
+        platform: 'android',
+        deviceName: 'Pixel 7',
+        app: 'bs://abc',
+      });
+      expect(caps['appium:newCommandTimeout']).toBe(300);
+    });
+
+    it('sets local: true in bstack:options when browserstackLocal is true', () => {
+      const caps = provider.buildCapabilities({
+        platform: 'android',
+        deviceName: 'Pixel 7',
+        app: 'bs://abc',
+        browserstackLocal: true,
+      });
+      const bstack = caps['bstack:options'] as Record<string, unknown>;
+      expect(bstack.local).toBe(true);
     });
   });
 

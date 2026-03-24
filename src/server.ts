@@ -40,6 +40,8 @@ import { withRecording } from './recording/step-recorder';
 import {
   accessibilityResource,
   appStateResource,
+  browserstackLocalBinaryResource,
+  capabilitiesResource,
   contextResource,
   contextsResource,
   cookiesResource,
@@ -148,6 +150,8 @@ registerResource(sessionCurrentCodeResource);
 registerResource(sessionStepsResource);
 registerResource(sessionCodeResource);
 
+registerResource(browserstackLocalBinaryResource);
+registerResource(capabilitiesResource);
 registerResource(elementsResource);
 registerResource(accessibilityResource);
 registerResource(screenshotResource);

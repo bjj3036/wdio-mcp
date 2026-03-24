@@ -77,7 +77,7 @@ describe('attach_browser', () => {
   });
 
   it('uses provided host and port', async () => {
-    await callTool({ host: '192.168.1.1', port: 9333 });
+    await callTool({ attachConfig: { host: '192.168.1.1', port: 9333 } });
     expect(mockRemote).toHaveBeenCalledWith(expect.objectContaining({
       capabilities: expect.objectContaining({
         'goog:chromeOptions': expect.objectContaining({ debuggerAddress: '192.168.1.1:9333' }),
@@ -172,7 +172,7 @@ describe('attach_browser', () => {
   });
 
   it('initialises sessionHistory with constructed caps and empty steps', async () => {
-    await callTool({ host: 'myhost', port: 9333 });
+    await callTool({ attachConfig: { host: 'myhost', port: 9333 } });
     const state = getState();
     const history = state.sessionHistory.get('attached-session-id');
     expect(history).toBeDefined();
@@ -186,7 +186,7 @@ describe('attach_browser', () => {
   it('returns error text when remote() throws', async () => {
     const err = new Error('Connection refused');
     mockRemote.mockRejectedValue(err);
-    const result = await callTool({ port: 9999 });
+    const result = await callTool({ attachConfig: { port: 9999 } });
     expect(result.content[0].text).toMatch(/Error|Connection refused/);
   });
 });
