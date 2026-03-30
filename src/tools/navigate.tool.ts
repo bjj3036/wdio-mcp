@@ -27,4 +27,4 @@ export const navigateAction = async (url: string): Promise<CallToolResult> => {
   }
 };
 
-export const navigateTool: ToolCallback = async ({ url}: { url: string }) => navigateAction(url);
+export const navigateTool: ToolCallback = async ({ url }: { url: string }) => navigateAction(url);

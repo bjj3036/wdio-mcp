@@ -36,7 +36,7 @@ export const clickAction = async (selector: string, timeout: number, scrollToVie
   }
 };
 
-export const clickTool: ToolCallback = async ({ selector, scrollToView, timeout = defaultTimeout}: {
+export const clickTool: ToolCallback = async ({ selector, scrollToView, timeout = defaultTimeout }: {
   selector: string;
   scrollToView?: boolean;
   timeout?: number
