@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.1.1](https://github.com/webdriverio/mcp/compare/v3.1.0...v3.1.1) (2026-03-30)
+
+### Bug Fixes
+
+* Add `.js` extensions to type imports for ESM compatibility ([0dbc8b4](https://github.com/webdriverio/mcp/commit/0dbc8b4bc96f6d4631a98c0ed6c9f859fa0d35a2))
+
 ## [3.1.0](https://github.com/webdriverio/mcp/compare/v3.0.0...v3.1.0) (2026-03-30)
 
 ### Features
