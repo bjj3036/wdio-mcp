@@ -43,7 +43,7 @@ export const setValueAction = async (
   }
 };
 
-export const setValueTool: ToolCallback = async ({ selector, value, scrollToView = true, timeout = defaultTimeout}: {
+export const setValueTool: ToolCallback = async ({ selector, value, scrollToView = true, timeout = defaultTimeout }: {
   selector: string;
   value: string;
   scrollToView?: boolean;

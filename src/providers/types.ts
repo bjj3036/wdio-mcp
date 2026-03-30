@@ -3,6 +3,9 @@ export interface ConnectionConfig {
   port?: number;
   path?: string;
   protocol?: string;
+  user?: string;
+  key?: string;
+  services?: unknown[];
 }
 
 export interface SessionProvider {

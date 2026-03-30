@@ -7,9 +7,7 @@ export type LocalAppiumOptions = {
   deviceName: string;
   platformVersion?: string;
   automationName?: string;
-  appiumHost?: string;
-  appiumPort?: number;
-  appiumPath?: string;
+  appiumConfig?: { host?: string; port?: number; path?: string };
   autoGrantPermissions?: boolean;
   autoAcceptAlerts?: boolean;
   autoDismissAlerts?: boolean;
@@ -25,10 +23,11 @@ export class LocalAppiumProvider implements SessionProvider {
   name = 'local-appium';
 
   getConnectionConfig(options: Record<string, unknown>): ConnectionConfig {
+    const appiumConfig = options.appiumConfig as { host?: string; port?: number; path?: string } | undefined;
     const config = getAppiumServerConfig({
-      hostname: options.appiumHost as string | undefined,
-      port: options.appiumPort as number | undefined,
-      path: options.appiumPath as string | undefined,
+      hostname: appiumConfig?.host,
+      port: appiumConfig?.port,
+      path: appiumConfig?.path,
     });
     return { protocol: 'http', ...config };
   }
