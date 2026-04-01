@@ -1,4 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+const { mockTunnel } = vi.hoisted(() => ({
+  mockTunnel: { start: vi.fn(), stop: vi.fn() },
+}));
+
+vi.mock('browserstack-local', () => ({
+  Local: class {
+    start = mockTunnel.start;
+    stop = mockTunnel.stop;
+  },
+}));
+
 import { BrowserStackProvider } from '../../src/providers/cloud/browserstack.provider';
 
 describe('BrowserStackProvider', () => {
@@ -9,12 +21,22 @@ describe('BrowserStackProvider', () => {
   });
 
   describe('getConnectionConfig', () => {
-    it('returns BrowserStack hub connection details', () => {
-      const config = provider.getConnectionConfig({});
+    it('returns hub.browserstack.com for browser platform', () => {
+      const config = provider.getConnectionConfig({ platform: 'browser' });
       expect(config.hostname).toBe('hub.browserstack.com');
       expect(config.protocol).toBe('https');
       expect(config.port).toBe(443);
       expect(config.path).toBe('/wd/hub');
+    });
+
+    it('returns hub-cloud.browserstack.com for android platform', () => {
+      const config = provider.getConnectionConfig({ platform: 'android' });
+      expect(config.hostname).toBe('hub-cloud.browserstack.com');
+    });
+
+    it('returns hub-cloud.browserstack.com for ios platform', () => {
+      const config = provider.getConnectionConfig({ platform: 'ios' });
+      expect(config.hostname).toBe('hub-cloud.browserstack.com');
     });
 
     it('reads credentials from environment variables', () => {
@@ -164,6 +186,17 @@ describe('BrowserStackProvider', () => {
       const bstack = caps['bstack:options'] as Record<string, unknown>;
       expect(bstack.local).toBe(true);
     });
+
+    it('sets local: true in bstack:options when browserstackLocal is "external"', () => {
+      const caps = provider.buildCapabilities({
+        platform: 'android',
+        deviceName: 'Pixel 7',
+        app: 'bs://abc',
+        browserstackLocal: 'external',
+      });
+      const bstack = caps['bstack:options'] as Record<string, unknown>;
+      expect(bstack.local).toBe(true);
+    });
   });
 
   describe('getSessionType', () => {
@@ -183,6 +216,71 @@ describe('BrowserStackProvider', () => {
   describe('shouldAutoDetach', () => {
     it('always returns false', () => {
       expect(provider.shouldAutoDetach({})).toBe(false);
+    });
+  });
+
+  describe('startTunnel', () => {
+    beforeEach(() => {
+      vi.stubEnv('BROWSERSTACK_ACCESS_KEY', 'testkey');
+      mockTunnel.start.mockReset();
+      mockTunnel.stop.mockReset();
+    });
+
+    it('returns the tunnel instance on successful start', async () => {
+      mockTunnel.start.mockImplementation((opts: unknown, cb: (err: unknown) => void) => cb(null));
+
+      const handle = await provider.startTunnel({});
+      expect(handle).toBeDefined();
+    });
+
+    it('passes logFile pointing to os.tmpdir() to avoid polluting cwd', async () => {
+      let capturedOpts: unknown;
+      mockTunnel.start.mockImplementation((opts: unknown, cb: (err: unknown) => void) => {
+        capturedOpts = opts;
+        cb(null);
+      });
+
+      await provider.startTunnel({});
+      const logFile = (capturedOpts as Record<string, unknown>).logFile as string;
+      expect(logFile).toBeDefined();
+      expect(logFile).toContain('browserstack-local');
+    });
+
+    it('passes forceLocal: true to tunnel start', async () => {
+      let capturedOpts: unknown;
+      mockTunnel.start.mockImplementation((opts: unknown, cb: (err: unknown) => void) => {
+        capturedOpts = opts;
+        cb(null);
+      });
+
+      await provider.startTunnel({});
+      expect((capturedOpts as Record<string, unknown>).forceLocal).toBe(true);
+    });
+
+    it('returns null when tunnel is already running (plain object error with message)', async () => {
+      mockTunnel.start.mockImplementation((opts: unknown, cb: (err: unknown) => void) =>
+        cb({ message: 'another browserstack local client is running' }),
+      );
+
+      const handle = await provider.startTunnel({});
+      expect(handle).toBeNull();
+    });
+
+    it('returns null when server is already listening (plain object error with message)', async () => {
+      mockTunnel.start.mockImplementation((opts: unknown, cb: (err: unknown) => void) =>
+        cb({ message: 'server is listening on port 45691' }),
+      );
+
+      const handle = await provider.startTunnel({});
+      expect(handle).toBeNull();
+    });
+
+    it('rethrows unrecognised errors', async () => {
+      mockTunnel.start.mockImplementation((opts: unknown, cb: (err: unknown) => void) =>
+        cb({ message: 'some other fatal error' }),
+      );
+
+      await expect(provider.startTunnel({})).rejects.toEqual({ message: 'some other fatal error' });
     });
   });
 });
