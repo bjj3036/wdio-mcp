@@ -54,7 +54,7 @@ export const startSessionToolDefinition: ToolDefinition = {
       port: z.number().optional(),
       path: z.string().optional(),
     }).optional().describe('Appium server connection (local provider only)'),
-    browserstackLocal: coerceBoolean.optional().default(false).describe('Enable BrowserStack Local tunnel for testing against local/internal URLs (BrowserStack only, default: false). When true, the tunnel is started automatically before the session and stopped when the session is closed.'),
+    browserstackLocal: z.union([coerceBoolean, z.literal('external')]).optional().default(false).describe('Enable BrowserStack Local tunnel routing (BrowserStack only, default: false). true = auto-start tunnel before session and stop on close. "external" = tunnel already running externally, set local: true in capabilities only.'),
     navigationUrl: z.string().optional().describe('URL to navigate to after starting'),
     capabilities: z.record(z.string(), z.unknown()).optional().describe('Additional capabilities to merge'),
   },
@@ -87,7 +87,7 @@ type StartSessionArgs = {
   attach?: boolean;
   attachConfig?: { port?: number; host?: string };
   appiumConfig?: { host?: string; port?: number; path?: string };
-  browserstackLocal?: boolean;
+  browserstackLocal?: boolean | 'external';
   navigationUrl?: string;
   capabilities?: Record<string, unknown>;
 };
@@ -186,7 +186,7 @@ async function startBrowserSession(args: StartSessionArgs): Promise<CallToolResu
     capabilities: userCapabilities,
   });
 
-  const tunnelHandle = args.browserstackLocal
+  const tunnelHandle = args.browserstackLocal === true
     ? await provider.startTunnel?.(args as Record<string, unknown>)
     : undefined;
 
@@ -250,7 +250,7 @@ async function startMobileSession(args: StartSessionArgs): Promise<CallToolResul
   const serverConfig = provider.getConnectionConfig(args as Record<string, unknown>);
   const mergedCapabilities = provider.buildCapabilities(args as Record<string, unknown>);
 
-  const tunnelHandle = args.browserstackLocal
+  const tunnelHandle = args.browserstackLocal === true
     ? await provider.startTunnel?.(args as Record<string, unknown>)
     : undefined;
 

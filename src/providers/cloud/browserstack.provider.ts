@@ -1,14 +1,18 @@
 import { promisify } from 'node:util';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { Local as BrowserstackTunnel } from 'browserstack-local';
 import type { ConnectionConfig, SessionProvider, SessionResult } from '../types';
 
 export class BrowserStackProvider implements SessionProvider {
   name = 'browserstack';
 
-  getConnectionConfig(_options: Record<string, unknown>): ConnectionConfig {
+  getConnectionConfig(options: Record<string, unknown>): ConnectionConfig {
+    const platform = options.platform as string;
+    const hostname = platform === 'browser' ? 'hub.browserstack.com' : 'hub-cloud.browserstack.com';
     return {
       protocol: 'https',
-      hostname: 'hub.browserstack.com',
+      hostname,
       port: 443,
       path: '/wd/hub',
       user: process.env.BROWSERSTACK_USERNAME,
@@ -87,9 +91,10 @@ export class BrowserStackProvider implements SessionProvider {
     const tunnel = new BrowserstackTunnel();
     const start = promisify(tunnel.start.bind(tunnel));
     try {
-      await start({ key });
+      const logFile = join(tmpdir(), 'browserstack-local.log');
+      await start({ key, forceLocal: true, logFile });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
+      const msg = (e !== null && typeof e === 'object' ? (e as { message?: string }).message : undefined) ?? String(e);
       if (msg.includes('another browserstack local client is running') || msg.includes('server is listening on port')) {
         console.error('[BrowserStack] Tunnel already running — reusing existing tunnel');
         return null;

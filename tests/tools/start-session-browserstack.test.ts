@@ -88,7 +88,7 @@ describe('start_session with provider: browserstack', () => {
     });
 
     expect(mockRemote).toHaveBeenCalledWith(expect.objectContaining({
-      hostname: 'hub.browserstack.com',
+      hostname: 'hub-cloud.browserstack.com',
       user: 'testuser',
       key: 'testkey',
       capabilities: expect.objectContaining({
@@ -140,6 +140,20 @@ describe('start_session with browserstackLocal: true', () => {
     expect(result.isError).toBe(true);
     expect(result.content[0].text).toContain('tunnel failed');
     expect(mockRemote).not.toHaveBeenCalled();
+  });
+
+  it('does NOT call BrowserstackTunnel when browserstackLocal is "external"', async () => {
+    await callTool({ provider: 'browserstack', platform: 'browser', browser: 'chrome', browserstackLocal: 'external' });
+
+    expect(BrowserstackTunnel).not.toHaveBeenCalled();
+  });
+
+  it('sets local: true in bstack:options when browserstackLocal is "external"', async () => {
+    await callTool({ provider: 'browserstack', platform: 'browser', browser: 'chrome', browserstackLocal: 'external' });
+
+    const [call] = mockRemote.mock.calls;
+    const bstackOpts = call[0].capabilities['bstack:options'];
+    expect(bstackOpts.local).toBe(true);
   });
 
   it('creates a BrowserstackTunnel instance for mobile platform', async () => {
