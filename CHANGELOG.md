@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.2.2](https://github.com/webdriverio/mcp/compare/v3.2.1...v3.2.2) (2026-04-01)
+
+### Bug Fixes
+
+* Account for `clickable` attribute in tag filter validation ([3918d22](https://github.com/webdriverio/mcp/commit/3918d22aa5eb9188dc7726246af0993653107374))
+
 ## [3.2.1](https://github.com/webdriverio/mcp/compare/v3.2.0...v3.2.1) (2026-04-01)
 
 ### Bug Fixes
