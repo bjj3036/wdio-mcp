@@ -6,7 +6,7 @@ import { getBrowser } from '../session/state';
 
 export const switchTabToolDefinition: ToolDefinition = {
   name: 'switch_tab',
-  description: 'switches to a browser tab by handle or index',
+  description: 'Focuses a browser tab by window handle or 0-based index. All subsequent tool calls operate on the newly active tab. Get handles from wdio://session/current/tabs. Browser-only — use switch_context for mobile webviews.',
   inputSchema: {
     handle: z.string().optional().describe('Window handle to switch to'),
     index: z.number().int().min(0).optional().describe('0-based tab index to switch to'),

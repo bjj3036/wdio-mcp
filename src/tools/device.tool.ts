@@ -6,13 +6,13 @@ import { getBrowser } from '../session/state';
 
 export const hideKeyboardToolDefinition: ToolDefinition = {
   name: 'hide_keyboard',
-  description: 'hides the on-screen keyboard',
+  description: 'Dismisses the software keyboard on mobile. Call after text entry when the keyboard obscures elements you need to interact with next. No-op if already hidden. Mobile-only.',
   inputSchema: {},
 };
 
 export const rotateDeviceToolDefinition: ToolDefinition = {
   name: 'rotate_device',
-  description: 'rotates device to portrait or landscape orientation',
+  description: 'Rotates a mobile device to portrait or landscape and waits for the OS rotation to complete. Use to test orientation-dependent layouts. Mobile-only; no effect in browser sessions.',
   inputSchema: {
     orientation: z.enum(['PORTRAIT', 'LANDSCAPE']).describe('Device orientation'),
   },
@@ -20,7 +20,7 @@ export const rotateDeviceToolDefinition: ToolDefinition = {
 
 export const setGeolocationToolDefinition: ToolDefinition = {
   name: 'set_geolocation',
-  description: 'sets device geolocation (latitude, longitude, altitude)',
+  description: 'Overrides the device GPS coordinates for the session. Affects navigator.geolocation on web and location services on mobile. Location permissions must be granted to the app before calling this.',
   inputSchema: {
     latitude: z.number().min(-90).max(90).describe('Latitude coordinate'),
     longitude: z.number().min(-180).max(180).describe('Longitude coordinate'),

@@ -6,7 +6,7 @@ import type { ToolDefinition } from '../types/tool';
 
 export const navigateToolDefinition: ToolDefinition = {
   name: 'navigate',
-  description: 'navigates to a URL',
+  description: 'Loads a URL in the current tab and waits for the page load event. Resets page state (DOM, JS runtime). Use instead of clicking links to go directly to a known URL.',
   inputSchema: {
     url: z.string().min(1).describe('The URL to navigate to'),
   },

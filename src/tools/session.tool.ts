@@ -15,7 +15,7 @@ const automationEnum = z.enum(['XCUITest', 'UiAutomator2']);
 
 export const startSessionToolDefinition: ToolDefinition = {
   name: 'start_session',
-  description: 'Starts a browser or mobile app session. For local browser, use browser platform. For mobile apps, use ios or android platform. Use attach mode to connect to an existing Chrome instance.',
+  description: 'Starts a new browser or mobile automation session. Only one active session at a time — starting a new one closes the existing one. Use platform "browser" with a browser name, or "ios"/"android" with a deviceName. Use attach mode to connect to an already-running Chrome instance via CDP.',
   inputSchema: {
     provider: z.enum(['local', 'browserstack']).optional().default('local').describe('Session provider (default: local)'),
     platform: platformEnum.describe('Session platform type'),
@@ -94,7 +94,7 @@ type StartSessionArgs = {
 
 export const closeSessionToolDefinition: ToolDefinition = {
   name: 'close_session',
-  description: 'Closes or detaches from the current browser or app session',
+  description: 'Closes or detaches from the current session. Detach disconnects without terminating the process, preserving app state on the Appium server. Sessions started with noReset: true auto-detach by default.',
   inputSchema: {
     detach: coerceBoolean.optional().describe('If true, disconnect without terminating (preserves app state). Default: false'),
   },

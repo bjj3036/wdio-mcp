@@ -7,7 +7,7 @@ import { coerceBoolean } from '../utils/zod-helpers';
 
 export const setCookieToolDefinition: ToolDefinition = {
   name: 'set_cookie',
-  description: 'sets a cookie with specified name, value, and optional attributes',
+  description: 'Sets a browser cookie for the active session. The browser must already be on the target domain — cookies cannot be set cross-domain. Use to inject session tokens or feature flags without going through login flows.',
   inputSchema: {
     name: z.string().describe('Cookie name'),
     value: z.string().describe('Cookie value'),

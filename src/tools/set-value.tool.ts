@@ -9,7 +9,7 @@ const defaultTimeout: number = 3000;
 
 export const setValueToolDefinition: ToolDefinition = {
   name: 'set_value',
-  description: 'set value to an element, aka typing',
+  description: 'Clears an input or textarea and types the given text. Always replaces existing content. Fails if the element is not found or not interactable within the timeout.',
   inputSchema: {
     selector: z.string().describe('Value for the selector, in the form of css selector or xpath ("button.my-class" or "//button[@class=\'my-class\']")'),
     value: z.string().describe('Text to enter into the element'),

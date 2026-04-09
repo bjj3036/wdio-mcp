@@ -9,7 +9,7 @@ const defaultTimeout: number = 3000;
 
 export const clickToolDefinition: ToolDefinition = {
   name: 'click_element',
-  description: 'clicks an element',
+  description: 'Waits for an element to exist, scrolls it into view, and calls element.click(). For browser sessions. On iOS, element.click() is sometimes ignored — use tap_element (which calls element.tap()) instead.',
   inputSchema: {
     selector: z.string().describe('Value for the selector, in the form of css selector or xpath ("button.my-class" or "//button[@class=\'my-class\']" or "button=Exact text with spaces" or "a*=Link containing text")'),
     scrollToView: coerceBoolean.optional().describe('Whether to scroll the element into view before clicking').default(true),

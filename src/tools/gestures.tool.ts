@@ -7,7 +7,7 @@ import { getBrowser } from '../session/state';
 // Tap Tool
 export const tapElementToolDefinition: ToolDefinition = {
   name: 'tap_element',
-  description: 'taps an element by selector or screen coordinates (mobile)',
+  description: 'Calls element.tap() on a matched element or taps at absolute screen coordinates. Use on iOS when element.click() (click_element) is ignored — tap is the native gesture iOS responds to. Mobile-only.',
   inputSchema: {
     selector: z
       .string()
@@ -61,7 +61,7 @@ export const tapElementTool: ToolCallback = async (args: {
 // Swipe Tool
 export const swipeToolDefinition: ToolDefinition = {
   name: 'swipe',
-  description: 'performs a swipe gesture in specified direction (mobile)',
+  description: 'Performs a full-screen swipe gesture on mobile. Direction is content movement (e.g. "up" scrolls a list upward, not the finger direction). Use to scroll past visible bounds; for moving a specific element use drag_and_drop. Mobile-only — use scroll for browsers.',
   inputSchema: {
     direction: z.enum(['up', 'down', 'left', 'right']).describe('Swipe direction'),
     duration: z
