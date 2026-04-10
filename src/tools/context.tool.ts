@@ -6,7 +6,7 @@ import { getBrowser } from '../session/state';
 
 export const switchContextToolDefinition: ToolDefinition = {
   name: 'switch_context',
-  description: 'Switches between native and webview automation contexts in a hybrid mobile app. Required before using CSS/XPath selectors inside an embedded webview — switch to WEBVIEW_* first, then switch back to NATIVE_APP for native elements. List available contexts from wdio://session/current/contexts.',
+  description: 'Switches between native and webview automation contexts in a hybrid mobile app. Required before using CSS/XPath selectors inside an embedded webview — switch to WEBVIEW_* first, then switch back to NATIVE_APP for native elements. List available contexts using get_contexts tool or wdio://session/current/contexts resource.',
   inputSchema: {
     context: z
       .string()
@@ -32,7 +32,6 @@ export const switchContextTool: ToolCallback = async (args: {
         return { content: [{ type: 'text', text: `Switched to context: ${targetContext}` }] };
       }
       throw new Error(`Error: Invalid context index ${context}. Available contexts: ${contexts.length}`);
-
     }
 
     await browser.switchContext(context);

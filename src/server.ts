@@ -68,6 +68,12 @@ import {
   uploadAppTool,
   uploadAppToolDefinition,
 } from './tools/browserstack.tool';
+import { screenshotTool, screenshotToolDefinition } from './tools/screenshot.tool';
+import { accessibilityTool, accessibilityToolDefinition } from './tools/accessibility.tool';
+import { getTabsTool, getTabsToolDefinition } from './tools/get-tabs.tool';
+import { getContextsTool, getContextsToolDefinition } from './tools/get-contexts.tool';
+import { appStateTool, appStateToolDefinition } from './tools/app-state.tool';
+import { getCookiesTool, getCookiesToolDefinition } from './tools/get-cookies.tool';
 
 console.log = (...args) => console.error('[LOG]', ...args);
 console.info = (...args) => console.error('[INFO]', ...args);
@@ -143,6 +149,13 @@ registerTool(getElementsToolDefinition, getElementsTool);
 
 registerTool(listAppsToolDefinition, listAppsTool);
 registerTool(uploadAppToolDefinition, uploadAppTool);
+
+registerTool(screenshotToolDefinition, screenshotTool);
+registerTool(accessibilityToolDefinition, accessibilityTool);
+registerTool(getTabsToolDefinition, getTabsTool);
+registerTool(getContextsToolDefinition, getContextsTool);
+registerTool(appStateToolDefinition, appStateTool);
+registerTool(getCookiesToolDefinition, getCookiesTool);
 
 registerResource(sessionsIndexResource);
 registerResource(sessionCurrentStepsResource);

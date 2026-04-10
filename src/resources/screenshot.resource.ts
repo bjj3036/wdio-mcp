@@ -32,7 +32,7 @@ async function processScreenshot(screenshotBase64: string): Promise<{ data: Buff
   return { data: outputBuffer, mimeType: 'image/png' };
 }
 
-async function readScreenshot(): Promise<{ mimeType: string; blob: string }> {
+export async function readScreenshot(): Promise<{ mimeType: string; blob: string }> {
   try {
     const browser = getBrowser();
     const screenshot = await browser.takeScreenshot();

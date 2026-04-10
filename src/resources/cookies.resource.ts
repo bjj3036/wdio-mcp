@@ -1,7 +1,7 @@
 import type { ResourceDefinition } from '../types/resource';
 import { getBrowser } from '../session/state';
 
-async function readCookies(name?: string): Promise<{ mimeType: string; text: string }> {
+export async function readCookies(name?: string): Promise<{ mimeType: string; text: string }> {
   try {
     const browser = getBrowser();
 
@@ -15,7 +15,7 @@ async function readCookies(name?: string): Promise<{ mimeType: string; text: str
     const cookies = await browser.getCookies();
     return { mimeType: 'application/json', text: JSON.stringify(cookies) };
   } catch (e) {
-    return { mimeType: 'application/json', text: JSON.stringify({ error: String(e) }) };
+    return { mimeType: 'text/plain', text: `Error: ${e}` };
   }
 }
 

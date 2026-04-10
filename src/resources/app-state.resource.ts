@@ -2,9 +2,16 @@ import type { ResourceDefinition } from '../types/resource';
 import { ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { getBrowser } from '../session/state';
 
-async function readAppState(bundleId: string): Promise<{ mimeType: string; text: string }> {
+export async function readAppState(bundleId: string): Promise<{ mimeType: string; text: string }> {
   try {
     const browser = getBrowser();
+
+    if (!browser.isMobile) {
+      return {
+        mimeType: 'text/plain',
+        text: 'Error: get_app_state is mobile-only. Use it on an iOS or Android session.'
+      };
+    }
 
     const appIdentifier = browser.isAndroid
       ? { appId: bundleId }
@@ -34,7 +41,7 @@ export const appStateResource: ResourceDefinition = {
   template: new ResourceTemplate('wdio://session/current/app-state/{bundleId}', { list: undefined }),
   description: 'App state for a given bundle ID',
   handler: async (uri, variables) => {
-    const result = await readAppState(variables.bundleId as string);
+    const result = await readAppState(variables.bundleId);
     return { contents: [{ uri: uri.href, mimeType: result.mimeType, text: result.text }] };
   },
 };

@@ -1,7 +1,7 @@
 import type { ResourceDefinition } from '../types/resource';
 import { getBrowser } from '../session/state';
 
-async function readContexts(): Promise<{ mimeType: string; text: string }> {
+export async function readContexts(): Promise<{ mimeType: string; text: string }> {
   try {
     const browser = getBrowser();
     const contexts = await browser.getContexts();
@@ -11,7 +11,7 @@ async function readContexts(): Promise<{ mimeType: string; text: string }> {
   }
 }
 
-async function readCurrentContext(): Promise<{ mimeType: string; text: string }> {
+export async function readCurrentContext(): Promise<{ mimeType: string; text: string }> {
   try {
     const browser = getBrowser();
     const currentContext = await browser.getContext();

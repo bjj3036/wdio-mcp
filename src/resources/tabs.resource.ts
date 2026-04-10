@@ -1,7 +1,7 @@
 import type { ResourceDefinition } from '../types/resource';
 import { getBrowser } from '../session/state';
 
-async function readTabs(): Promise<{ mimeType: string; text: string }> {
+export async function readTabs(): Promise<{ mimeType: string; text: string }> {
   try {
     const browser = getBrowser();
     const handles = await browser.getWindowHandles();
