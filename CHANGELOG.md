@@ -1,5 +1,7 @@
 # Changelog
 
+## [3.2.5](https://github.com/webdriverio/mcp/compare/v3.2.4...v3.2.5) (2026-04-18)
+
 ## [3.2.4](https://github.com/webdriverio/mcp/compare/v3.2.3...v3.2.4) (2026-04-09)
 
 ## [3.2.3](https://github.com/webdriverio/mcp/compare/v3.2.2...v3.2.3) (2026-04-06)
