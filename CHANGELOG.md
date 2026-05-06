@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.4.3](https://github.com/webdriverio/mcp/compare/v3.4.2...v3.4.3) (2026-05-06)
+
+### Bug Fixes
+
+* **xmldom:** Fix type errors by importing XMLDocument, XMLElement, XMLNode from @xmldom/xmldom ([c11c204](https://github.com/webdriverio/mcp/commit/c11c20441f7ce9ec09c54d3b07cdc7dd8ef29b71))
+
 ## [3.4.2](https://github.com/webdriverio/mcp/compare/v3.4.1...v3.4.2) (2026-05-06)
 
 ## [3.4.1](https://github.com/webdriverio/mcp/compare/v3.4.0...v3.4.1) (2026-04-30)
